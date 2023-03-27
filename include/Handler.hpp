@@ -29,7 +29,6 @@ namespace mediasoupclient
 	public:
 		struct DataChannel
 		{
-			std::string localId;
 			rtc::scoped_refptr<webrtc::DataChannelInterface> dataChannel;
 			nlohmann::json sctpStreamParameters;
 		};
@@ -75,6 +74,9 @@ namespace mediasoupclient
 		std::unique_ptr<PeerConnection> pc{ nullptr };
 		bool hasDataChannelMediaSection = false;
 		uint32_t nextSendSctpStreamId   = 0;
+		// Initial server side DTLS role. If not 'auto', it will force the opposite
+		// value in client side.
+		std::string forcedLocalDtlsRole;
 	};
 
 	class SendHandler : public Handler
@@ -102,7 +104,8 @@ namespace mediasoupclient
 		SendResult Send(
 		  webrtc::MediaStreamTrackInterface* track,
 		  std::vector<webrtc::RtpEncodingParameters>* encodings,
-		  const nlohmann::json* codecOptions);
+		  const nlohmann::json* codecOptions,
+		  const nlohmann::json* codec);
 		void StopSending(const std::string& localId);
 		void ReplaceTrack(const std::string& localId, webrtc::MediaStreamTrackInterface* track);
 		void SetMaxSpatialLayer(const std::string& localId, uint8_t spatialLayer);

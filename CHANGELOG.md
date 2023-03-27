@@ -1,6 +1,27 @@
 # Changelog
 
 
+### NOT RELEASED
+
+
+### 3.4.0
+
+* 'maxaveragebitrate' support for Opus. Thanks @PeterCang.
+*  Enable VP9 SVC (#131). Thanks @harvestsure.
+*  Reuse closed m= sections in remote SDP offer (#99).
+*  Allow forcing local DTLS role (#133).
+*  Add cbr config option for opus (#138). Thanks @GEverding.
+
+### 3.3.0
+
+* Update to libwebrtc M94/4606.
+
+### 3.2.0
+
+* Do not auto generate the stream ID for the receiving dataChannel,
+  but provide it via API. Fixes #126.
+
+
 ### 3.1.5
 
 * Fix profile-id codec parameter by converting parsed value into integer. Fixes #115

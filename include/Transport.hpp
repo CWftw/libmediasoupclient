@@ -133,6 +133,7 @@ namespace mediasoupclient
 		  webrtc::MediaStreamTrackInterface* track,
 		  const std::vector<webrtc::RtpEncodingParameters>* encodings,
 		  const nlohmann::json* codecOptions,
+		  const nlohmann::json* codec,
 		  const nlohmann::json& appData = nlohmann::json::object());
 
 		DataProducer* ProduceData(
@@ -207,6 +208,7 @@ namespace mediasoupclient
 		  DataConsumer::Listener* listener,
 		  const std::string& id,
 		  const std::string& producerId,
+		  const uint16_t streamId,
 		  const std::string& label,
 		  const std::string& protocol   = std::string(),
 		  const nlohmann::json& appData = nlohmann::json::object());
