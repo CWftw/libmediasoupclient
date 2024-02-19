@@ -15,9 +15,10 @@
 #include "api/make_ref_counted.h"
 #include "api/units/time_delta.h"
 #include "rtc_base/checks.h"
-#include "rtc_base/ref_counted_object.h"
 #include "rtc_base/thread.h"
 #include "rtc_base/time_utils.h"
+
+using ::webrtc::TimeDelta;
 
 // Audio sample value that is high enough that it doesn't occur naturally when
 // frames are being faked. E.g. NetEq will not generate this large sample value
@@ -34,11 +35,6 @@ static const int kTotalDelayMs = 0;
 static const int kClockDriftMs = 0;
 static const uint32_t kMaxVolume = 14392;
 
-enum {
-  MSG_START_PROCESS,
-  MSG_RUN_PROCESS,
-};
-
 FakeAudioCaptureModule::FakeAudioCaptureModule()
     : audio_callback_(nullptr),
       recording_(false),
@@ -48,9 +44,7 @@ FakeAudioCaptureModule::FakeAudioCaptureModule()
       current_mic_level_(kMaxVolume),
       started_(false),
       next_frame_time_(0),
-      frames_received_(0) {
-  process_thread_checker_.Detach();
-}
+      frames_received_(0) {}
 
 FakeAudioCaptureModule::~FakeAudioCaptureModule() {
   if (process_thread_) {
@@ -477,7 +471,7 @@ void FakeAudioCaptureModule::ProcessFrameP() {
   const int64_t wait_time =
       (next_frame_time_ > current_time) ? next_frame_time_ - current_time : 0;
   process_thread_->PostDelayedTask([this] { ProcessFrameP(); },
-                                   webrtc::TimeDelta::Millis(wait_time));
+                                   TimeDelta::Millis(wait_time));
 }
 
 void FakeAudioCaptureModule::ReceiveFrameP() {

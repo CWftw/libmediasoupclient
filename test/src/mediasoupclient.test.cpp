@@ -648,7 +648,7 @@ TEST_CASE("mediasoupclient", "[mediasoupclient]")
 		auto newAudioTrack = createAudioTrack("audio-track-id-2");
 
 		REQUIRE_NOTHROW(audioProducer->ReplaceTrack(newAudioTrack.get()));
-		REQUIRE(audioProducer->GetTrack() == newAudioTrack.get());
+		REQUIRE(audioProducer->GetTrack() == newAudioTrack);
 		// Producer was already paused.
 		REQUIRE(audioProducer->IsPaused());
 
@@ -658,7 +658,7 @@ TEST_CASE("mediasoupclient", "[mediasoupclient]")
 		auto newVideoTrack = createVideoTrack("video-track-id-2");
 
 		REQUIRE_NOTHROW(videoProducer->ReplaceTrack(newVideoTrack.get()));
-		REQUIRE(videoProducer->GetTrack() == newVideoTrack.get());
+		REQUIRE(videoProducer->GetTrack() == newVideoTrack);
 		REQUIRE(!videoProducer->IsPaused());
 
 		videoTrack.release();

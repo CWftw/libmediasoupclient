@@ -82,5 +82,7 @@ rtc::scoped_refptr<webrtc::VideoTrackInterface> createVideoTrack(const std::stri
 	if (!Factory)
 		createFactory();
 
-	return Factory->CreateVideoTrack(label, webrtc::FakeVideoTrackSource::Create().get());
+	rtc::scoped_refptr<webrtc::FakeVideoTrackSource> source = webrtc::FakeVideoTrackSource::Create();
+
+	return Factory->CreateVideoTrack(source, label);
 }

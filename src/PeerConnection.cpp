@@ -1,4 +1,3 @@
-#include <memory>
 #define MSC_CLASS "PeerConnection"
 
 #include "PeerConnection.hpp"
@@ -139,7 +138,7 @@ namespace mediasoupclient
 
 		MSC_WARN(
 		  "webrtc::PeerConnection::SetConfiguration failed [%s:%s]",
-		  webrtc::ToString(error.type()),
+		  webrtc::ToString(error.type()).data(),
 		  error.message());
 
 		return false;
@@ -180,7 +179,7 @@ namespace mediasoupclient
 		MSC_TRACE();
 
 		webrtc::SdpParseError error;
-		std::unique_ptr<webrtc::SessionDescriptionInterface> sessionDescription{ nullptr};
+		std::unique_ptr<webrtc::SessionDescriptionInterface> sessionDescription;
 		rtc::scoped_refptr<SetLocalDescriptionObserver> observer(
 		  new rtc::RefCountedObject<SetLocalDescriptionObserver>());
 
@@ -374,9 +373,14 @@ namespace mediasoupclient
 	{
 		MSC_TRACE();
 
-		auto result = this->pc->CreateDataChannelOrError(label, config);
+		const auto result =
+		  this->pc->CreateDataChannelOrError(label, config);
 
-		if (!result.ok())
+		if (result.ok())
+		{
+			MSC_DEBUG("Success creating data channel");
+		}
+		else
 		{
 			MSC_THROW_ERROR("Failed creating data channel");
 		}
@@ -408,7 +412,7 @@ namespace mediasoupclient
 		{
 			MSC_WARN(
 					"webtc::SetLocalDescriptionObserver failure [%s:%s]",
-					webrtc::ToString(error.type()),
+					webrtc::ToString(error.type()).data(),
 					error.message());
 
 			auto message = std::string(error.message());
@@ -417,6 +421,7 @@ namespace mediasoupclient
 		}
 		else
 		{
+			MSC_THROW_ERROR("Failed creating data channel");
 			this->promise.set_value();
 		}
 	};
@@ -445,7 +450,7 @@ namespace mediasoupclient
 		{
 			MSC_WARN(
 					"webtc::SetRemoteDescriptionObserver failure [%s:%s]",
-					webrtc::ToString(error.type()),
+					webrtc::ToString(error.type()).data(),
 					error.message());
 
 			auto message = std::string(error.message());
@@ -487,7 +492,7 @@ namespace mediasoupclient
 
 		MSC_WARN(
 		  "webtc::SetSessionDescriptionObserver failure [%s:%s]",
-		  webrtc::ToString(error.type()),
+		  webrtc::ToString(error.type()).data(),
 		  error.message());
 
 		auto message = std::string(error.message());
@@ -531,7 +536,7 @@ namespace mediasoupclient
 
 		MSC_WARN(
 		  "webtc::CreateSessionDescriptionObserver failure [%s:%s]",
-		  webrtc::ToString(error.type()),
+		  webrtc::ToString(error.type()).data(),
 		  error.message());
 
 		auto message = std::string(error.message());
