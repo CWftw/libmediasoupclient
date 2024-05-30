@@ -29,7 +29,36 @@ namespace mediasoupclient
 		class Listener
 		{
 		public:
+			virtual void OnAudioData(const void* audio_data,
+							int bits_per_sample,
+							int sample_rate,
+							size_t number_of_channels,
+							size_t number_of_frames) = 0;
 			virtual void OnTransportClose(Producer* producer) = 0;
+		};
+
+		class MyAudioSink : public webrtc::AudioTrackSinkInterface {
+		public:
+			void SetListener(Listener* listener)
+			{
+				this->listener = listener;
+			}
+
+			void OnData(const void* audio_data,
+						int bits_per_sample,
+						int sample_rate,
+						size_t number_of_channels,
+						size_t number_of_frames) override
+			{
+				// Notify the listener with the audio data
+				if (listener)
+				{
+					listener->OnAudioData(audio_data, bits_per_sample, sample_rate, number_of_channels, number_of_frames);
+				}
+			}
+
+		private:
+			Listener* listener = nullptr;
 		};
 
 	private:
@@ -90,6 +119,8 @@ namespace mediasoupclient
 		uint8_t maxSpatialLayer{ 0 };
 		// App custom data.
 		nlohmann::json appData;
+		// Get volume
+		MyAudioSink* mySink;
 	};
 } // namespace mediasoupclient
 

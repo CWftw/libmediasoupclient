@@ -23,6 +23,14 @@ namespace mediasoupclient
 	    appData(appData)
 	{
 		MSC_TRACE();
+
+		webrtc::AudioTrackInterface* audioTrack = static_cast<webrtc::AudioTrackInterface*>(track);
+		if (audioTrack) {
+			MyAudioSink* mySink = new MyAudioSink();
+			mySink->SetListener(listener);
+			this->mySink = mySink;
+			audioTrack->AddSink(mySink);
+		}
 	}
 
 	const std::string& Consumer::GetId() const

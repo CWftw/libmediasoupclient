@@ -21,6 +21,16 @@ namespace mediasoupclient
 	    rtpSender(rtpSender), track(track), rtpParameters(rtpParameters), appData(appData)
 	{
 		MSC_TRACE();
+
+		MSC_DEBUG("COLIN: producer before audioTrack");
+		webrtc::AudioTrackInterface* audioTrack = static_cast<webrtc::AudioTrackInterface*>(track);
+		if (audioTrack) {
+			MSC_DEBUG("COLIN: producer if audioTrack");
+			MyAudioSink* mySink = new MyAudioSink();
+			mySink->SetListener(listener);
+			this->mySink = mySink;
+			audioTrack->AddSink(mySink);
+		}
 	}
 
 	const std::string& Producer::GetId() const
